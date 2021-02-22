@@ -1,0 +1,6 @@
+<?php
+
+//MySql Connection Details
+$serverName = "localhost";
+$userName = "root";
+$password = "root";
