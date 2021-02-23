@@ -25,23 +25,57 @@ function databaseConnection($serverName = "localhost", $userName = "root", $pass
  * *********************** */
 
 function getInputCommand() {
-    $dbConnection = databaseConnection();
+    databaseConnection();
 
     //Get input 
     $getCommand = readline("Enter the command (use --help to see all command line options) : ");
 
     //exploding command to get all parramters
-    $splitCommand = explode(" ",$getCommand);
-    
+    $splitCommand = explode(" ", $getCommand);
+
     //match with entered command
     if (strcmp(trim($getCommand), "--help") == 0) {
         getHelp();
-    }
-    elseif(strcmp(trim($splitCommand[0]), "--file") == 0){
-        //check input file is exists or not
-        if((strcmp(trim($splitCommand[1]), "--file") == 0) && file_exists(realpath(trim($splitCommand[1]) == 1))){
-            echo "hello";
+    } elseif (strcmp(trim($splitCommand[0]), "--file") == 0) {
+        //check if file name is provided or not
+        if (isset($splitCommand[1])) {
+            $fileName = trim($splitCommand[1]);
+            //check input file is exists or not
+            if (file_exists(realpath(trim($fileName) == 1))) {
+                executeFile($fileName);
+            }
+        } else {
+            echo "try --help for more information";
+            exit();
         }
+    }
+}
+
+/* * ***************************
+ * Function to execute file
+ * store all csv file data to database
+ * @param - file Name
+ */
+
+function executeFile($fileName = 'users.csv') {
+
+    //create table
+    createTable();
+}
+
+/* * ****************************
+ * Function to create tabel using database connections
+ */
+
+function createTable() {
+    $dbConnection = databaseConnection();
+
+    //create database if its not exists
+    $sql = "CREATE DATABASE IF NOT EXISTS userDetails";
+    if ($dbConnection->query($sql) === TRUE) {
+        echo "Database created successfully";
+    } else {
+        echo "Error creating database: " . $dbConnection->error;
     }
 }
 
