@@ -56,10 +56,28 @@ function executeFile($fileName = 'users.csv', $dbConnection) {
 
     //create table
     createTable($dbConnection);
-    
+
     //open csv file
-    $file = fopen($fileName,"r");
-    
+    $file = fopen($fileName, "r");
+    $i = 1;
+    while (!feof($file)) {
+        $fileArray = fgetcsv($file);
+        $name = ucfirst($fileArray[0]);
+        $surname = ucfirst($fileArray[1]);
+        //validate email address
+        if (validateEmailAddress($fileArray[2]) === True) {
+            $email = trim(strtolower($fileArray[2]));
+            $insertQuery = 'INSERT INTO userDetails (name, surname, email)
+            VALUES ("'.$name.'", "'.$surname.'", "'.$email.'")';
+            if ($dbConnection->query($insertQuery) === TRUE) {
+                $count = $i++;
+            } else {
+                //echo "\n Error: " . $insertQuery . "<br>" . $dbConnection->error;
+                echo "\n Error: " . $dbConnection->error. "\n";
+            }
+        }
+    }
+    echo "\n".$i . "Users inserted successfully";
 }
 
 /* * ****************************
@@ -78,7 +96,7 @@ function createTable($dbConnection) {
     //select database 
     mysqli_select_db($dbConnection, 'userInformation');
     //create user table in database
-    $createTableQuery = "CREATE TABLE IF NOT EXISTS userTable (
+    $createTableQuery = "CREATE TABLE IF NOT EXISTS userDetails (
                          name VARCHAR(30) NOT NULL,
                          surname VARCHAR(30) NOT NULL,
                          email VARCHAR(50) NOT NULL,
@@ -88,6 +106,24 @@ function createTable($dbConnection) {
         echo "Table userTable created successfully \n";
     } else {
         echo "Error creating table: " . $dbConnection->error;
+    }
+}
+
+/* * ***********************
+ * Function to validate email address
+ * @param - email
+ */
+
+function validateEmailAddress($email = '') {
+    // Remove all illegal characters from email
+    $email = filter_var($email, FILTER_SANITIZE_EMAIL);
+
+    // Validate e-mail
+    if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        return true;
+    } else {
+        echo("$email is not a valid email address");
+        return false;
     }
 }
 
