@@ -35,8 +35,16 @@ function getInputCommand($dbConnection) {
         if (isset($splitCommand[1])) {
             $fileName = trim($splitCommand[1]);
             //check input file is exists or not
-            if (file_exists(realpath(trim($fileName) == 1))) {
+            if ((strcmp($fileName, "users.csv") == 0) && file_exists(realpath(trim($fileName))) == 1) {
+                //if file exists save  data to database
                 executeFile($fileName, $dbConnection);
+            } else
+            if (strcmp($fileName, "users.csv") && file_exists(realpath("users.csv") == false)) {
+                echo "users.csv does not exist.\n";
+                exit();
+            } else {
+                echo "Invalid filename entered. Please try again\n";
+                exit();
             }
         } else {
             echo "try --help for more information";
@@ -68,16 +76,16 @@ function executeFile($fileName = 'users.csv', $dbConnection) {
         if (validateEmailAddress($fileArray[2]) === True) {
             $email = trim(strtolower($fileArray[2]));
             $insertQuery = 'INSERT INTO userDetails (name, surname, email)
-            VALUES ("'.$name.'", "'.$surname.'", "'.$email.'")';
+            VALUES ("' . $name . '", "' . $surname . '", "' . $email . '")';
             if ($dbConnection->query($insertQuery) === TRUE) {
                 $count = $i++;
             } else {
                 //echo "\n Error: " . $insertQuery . "<br>" . $dbConnection->error;
-                echo "\n Error: " . $dbConnection->error. "\n";
+                echo "\n Error: " . $dbConnection->error . "\n";
             }
         }
     }
-    echo "\n".$i . "Users inserted successfully";
+    echo "\n" . $i . "Users inserted successfully";
 }
 
 /* * ****************************
