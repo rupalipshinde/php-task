@@ -1,32 +1,26 @@
 <?php
 
-getInputCommand();
+$serverName = "localhost";
+$userName = "root";
+$password = "";
+$dbConnection;
 
-/* * ***************************
- * Function to database connection
- * @param : server name
- *          user name
- *          password
- * *********************** */
-
-function databaseConnection($serverName = "localhost", $userName = "root", $password = "") {
 // Create connection
-    $conn = new mysqli($serverName, $userName, $password);
+$dbConnection = new mysqli($serverName, $userName, $password);
 
 // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-    echo "Connected successfully \n";
+if ($dbConnection->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
 }
+echo "Connected successfully \n";
 
+
+getInputCommand($dbConnection);
 /* * ***************************
  * Function to handle commands from command line
  * *********************** */
 
-function getInputCommand() {
-    databaseConnection();
-
+function getInputCommand($dbConnection) {
     //Get input 
     $getCommand = readline("Enter the command (use --help to see all command line options) : ");
 
@@ -42,7 +36,7 @@ function getInputCommand() {
             $fileName = trim($splitCommand[1]);
             //check input file is exists or not
             if (file_exists(realpath(trim($fileName) == 1))) {
-                executeFile($fileName);
+                executeFile($fileName, $dbConnection);
             }
         } else {
             echo "try --help for more information";
@@ -55,27 +49,45 @@ function getInputCommand() {
  * Function to execute file
  * store all csv file data to database
  * @param - file Name
+ *          database connection
  */
 
-function executeFile($fileName = 'users.csv') {
+function executeFile($fileName = 'users.csv', $dbConnection) {
 
     //create table
-    createTable();
+    createTable($dbConnection);
+    
+    //open csv file
+    $file = fopen($fileName,"r");
+    
 }
 
 /* * ****************************
  * Function to create tabel using database connections
  */
 
-function createTable() {
-    $dbConnection = databaseConnection();
-
+function createTable($dbConnection) {
     //create database if its not exists
-    $sql = "CREATE DATABASE IF NOT EXISTS userDetails";
-    if ($dbConnection->query($sql) === TRUE) {
-        echo "Database created successfully";
+    $sql = "CREATE DATABASE IF NOT EXISTS userInformation";
+    if (mysqli_query($dbConnection, $sql)) {
+        echo "Database created successfully \n";
     } else {
         echo "Error creating database: " . $dbConnection->error;
+    }
+
+    //select database 
+    mysqli_select_db($dbConnection, 'userInformation');
+    //create user table in database
+    $createTableQuery = "CREATE TABLE IF NOT EXISTS userTable (
+                         name VARCHAR(30) NOT NULL,
+                         surname VARCHAR(30) NOT NULL,
+                         email VARCHAR(50) NOT NULL,
+                         UNIQUE (email)
+                        )";
+    if ($dbConnection->query($createTableQuery) === TRUE) {
+        echo "Table userTable created successfully \n";
+    } else {
+        echo "Error creating table: " . $dbConnection->error;
     }
 }
 
