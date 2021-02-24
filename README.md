@@ -22,6 +22,15 @@ Open CSV file
 $file = fopen($fileName, "r");
 ```
 
+Create Table
+```
+CREATE TABLE IF NOT EXISTS tableName (
+                         name VARCHAR(30) NOT NULL,
+                         surname VARCHAR(30) NOT NULL,
+                         email VARCHAR(50) NOT NULL,
+                         UNIQUE (email)
+                        )
+```
 validate email address
 ```
 // Remove all illegal characters from email
@@ -36,3 +45,8 @@ if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
 }
 ```
 
+Store data in database
+```
+  'INSERT INTO tableName (name, surname, email)
+            VALUES ("' . $name . '", "' . $surname . '", "' . $email . '")';
+```
