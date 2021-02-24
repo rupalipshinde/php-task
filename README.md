@@ -48,5 +48,5 @@ if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
 Store data in database
 ```
   'INSERT INTO tableName (name, surname, email)
-            VALUES ("' . $name . '", "' . $surname . '", "' . $email . '")';
+            VALUES ($name,$surname,$email)';
 ```
