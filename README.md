@@ -16,7 +16,7 @@ database won't be altered
 * -h – MySQL host
 * --help – which will output the above list of directives with details.
 
-** Usage Examples
+### Usage Examples
 Open CSV file
 ```
 $file = fopen($fileName, "r");
@@ -36,7 +36,3 @@ if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
 }
 ```
 
-php -f user_upload.php
-
-2) Logic Test
-php -f user_upload.php
