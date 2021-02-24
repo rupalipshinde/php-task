@@ -4,7 +4,7 @@
 PHP script, that is executed from the command line, which accepts a CSV file as input
 (see command line directives below) and processes the CSV file.
 
-###Directives are - 
+### Directives are - 
 * --file [csv file name] – this is the name of the CSV to be parsed
 * --create_table – this will cause the MySQL users table to be built (and no further
  action will be taken)
@@ -16,7 +16,7 @@ database won't be altered
 * -h – MySQL host
 * --help – which will output the above list of directives with details.
 
-**Usage Examples
+** Usage Examples
 Open CSV file
 ```
 $file = fopen($fileName, "r");
