@@ -1,8 +1,13 @@
 <?php
 
-$serverName = "localhost";
-$userName = "root";
-$password = "";
+//Get input 
+$serverName = readline("Enter Server Name : ");
+$userName = readline("Enter MySQL Username : ");
+$password = readline("Enter MySQL Password : ");
+
+//$serverName = "localhost";
+//$userName = "root";
+//$password = "";
 $dbConnection;
 
 // Create connection
@@ -37,8 +42,10 @@ function getInputCommand($dbConnection, $serverName = "localhost", $userName = "
             $fileName = trim($splitCommand[1]);
             //check input file is exists or not
             if ((strcmp($fileName, "users.csv") == 0) && file_exists(realpath(trim($fileName))) == 1) {
-                if (trim($splitCommand[2]) == '--dry_run') {
-                    $dryRun = true;
+                if (isset($splitCommand[2])) {
+                    if (trim($splitCommand[2]) == '--dry_run') {
+                        $dryRun = true;
+                    }
                 }
                 //if file exists save  data to database
                 executeFile($fileName, $dbConnection, $dryRun, $serverName, $userName, $password);
@@ -153,7 +160,7 @@ function validateEmailAddress($email = '') {
     if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
         return true;
     } else {
-        echo("$email is not a valid email address");
+        echo $email ."is not a valid email address";
         return false;
     }
 }
@@ -170,5 +177,5 @@ function getHelp() {
     echo "-p – MySQL password\n";
     echo "-h – MySQL host\n";
     echo "--help – which will output the above list of directives with details.";
-    getInputCommand();
+//    getInputCommand();
 }
